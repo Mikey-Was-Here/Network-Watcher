@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
+using Raven.Client;
 
 namespace NetworkWatcher
 {
@@ -34,6 +35,17 @@ namespace NetworkWatcher
 
         private void frmMain_Load(object sender, EventArgs e)
         {
+            // Saving changes using the session API
+            using (IDocumentSession session = Program.DocumentStore.OpenSession())
+            {    // Operations against session
+                IpLocation loc = new IpLocation();
+                loc.fromIp = 16777216;
+                loc.toIp = 16777471;
+                loc.locationId = 17;
+                session.Store(loc);
+                session.SaveChanges();
+            }
+
             Api.MIB_TCPROW_OWNER_PID[] cn = Api.GetAllTcpConnections();
             foreach (Api.MIB_TCPROW_OWNER_PID item in cn)
             {
