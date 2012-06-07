@@ -54,6 +54,8 @@ namespace NetworkWatcher
                 ListViewItem lvi = new ListViewItem(msg);
                 listView1.Items.Add(msg);
             }
+
+            dynamic d = Api.GetAllTcpConnections();
         }
     }
 }
