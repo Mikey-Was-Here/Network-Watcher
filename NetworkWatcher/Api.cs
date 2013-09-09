@@ -25,6 +25,14 @@ namespace NetworkWatcher
             public int owningPid;
         }
 
+        [StructLayout(LayoutKind.Explicit, Size=8)]
+        struct LARGE_INTEGER
+        {
+            [FieldOffset(0)]public Int64 QuadPart;
+            [FieldOffset(0)]public UInt32 LowPart;
+            [FieldOffset(4)]public Int32 HighPart;
+        }
+
         [StructLayout(LayoutKind.Sequential)]
         public struct MIB_TCPTABLE_OWNER_PID
         {
@@ -99,5 +107,6 @@ namespace NetworkWatcher
 
             return tTable;
         }
+
     }
 }

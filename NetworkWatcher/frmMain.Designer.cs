@@ -28,37 +28,75 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.listView1 = new System.Windows.Forms.ListView();
+            this.lvMain = new System.Windows.Forms.ListView();
+            this.colRemote = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colLocal = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colPid = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colProcess = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colCountry = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
             // 
-            // listView1
+            // lvMain
             // 
-            this.listView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.listView1.Location = new System.Drawing.Point(13, 13);
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(401, 336);
-            this.listView1.TabIndex = 0;
-            this.listView1.UseCompatibleStateImageBehavior = false;
-            this.listView1.View = System.Windows.Forms.View.List;
+            this.lvMain.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.colRemote,
+            this.colLocal,
+            this.colPid,
+            this.colProcess,
+            this.colCountry});
+            this.lvMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lvMain.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.lvMain.Location = new System.Drawing.Point(0, 0);
+            this.lvMain.MultiSelect = false;
+            this.lvMain.Name = "lvMain";
+            this.lvMain.Size = new System.Drawing.Size(426, 361);
+            this.lvMain.TabIndex = 0;
+            this.lvMain.UseCompatibleStateImageBehavior = false;
+            this.lvMain.View = System.Windows.Forms.View.Details;
+            // 
+            // colRemote
+            // 
+            this.colRemote.Text = "Remote";
+            // 
+            // colLocal
+            // 
+            this.colLocal.Text = "Local";
+            // 
+            // colPid
+            // 
+            this.colPid.Text = "PID";
+            // 
+            // colProcess
+            // 
+            this.colProcess.Text = "Process";
+            // 
+            // colCountry
+            // 
+            this.colCountry.Text = "Country";
             // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(426, 361);
-            this.Controls.Add(this.listView1);
+            this.Controls.Add(this.lvMain);
             this.Name = "frmMain";
             this.Text = "Network Watcher";
             this.Load += new System.EventHandler(this.frmMain_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.frmMain_KeyDown);
+            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.frmMain_KeyPress);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.ListView lvMain;
+        private System.Windows.Forms.ColumnHeader colRemote;
+        private System.Windows.Forms.ColumnHeader colLocal;
+        private System.Windows.Forms.ColumnHeader colProcess;
+        private System.Windows.Forms.ColumnHeader colPid;
+        private System.Windows.Forms.ColumnHeader colCountry;
     }
 }
 
