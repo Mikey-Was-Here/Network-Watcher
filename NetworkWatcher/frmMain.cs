@@ -83,11 +83,11 @@ namespace NetworkWatcher
         {
         }
 
-        private void frmMain_KeyDown(object sender, KeyEventArgs e)
+        private void lvMain_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.F5)
             {
-                lvMain.Clear();
+                lvMain.Items.Clear();
                 LoadList();
             }
         }

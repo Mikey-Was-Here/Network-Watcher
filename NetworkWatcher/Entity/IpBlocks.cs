@@ -36,7 +36,7 @@ namespace NetworkWatcher.Entity
         public int Find(long ip)
         {
             KeyValuePair<long, IpBlock> kvp = (from item in this where ip >= item.Key && ip <= item.Value.EndIpNum select item).FirstOrDefault();
-            return kvp.Value.LocId;
+            return (kvp.Value != null) ? kvp.Value.LocId : -1;
         }
     }
 }
