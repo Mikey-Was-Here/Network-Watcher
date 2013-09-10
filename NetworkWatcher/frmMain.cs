@@ -8,6 +8,9 @@ using System.Text;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
+using System.Net.NetworkInformation;
+using System.Net;
+using System.Net.Sockets;
 
 namespace NetworkWatcher
 {
@@ -50,27 +53,37 @@ namespace NetworkWatcher
                     int foundLoc = Program.Iplocks.Find((long)item.remoteAddr);
 
                     CountryCode = Program.Locations.Find(foundLoc);
+
+                    string remoteData = string.Format("{0}.{1}.{2}.{3}:{4}", remoteAddr.b1, remoteAddr.b2, remoteAddr.b3, remoteAddr.b4, item.remotePort1);
+                    string localData = string.Format("{0}.{1}.{2}.{3}:{4}", localAddr.b1, localAddr.b2, localAddr.b3, localAddr.b4, localPort);
+
+                    Process p = null;
+                    try
+                    {
+                        p = Process.GetProcessById(item.owningPid);
+                    }
+                    catch { }
+
+                    ListViewItem lvi = new ListViewItem(remoteData);
+
+                    //lvi.SubItems.Add(remoteData);
+                    lvi.SubItems.Add(localData);
+                    lvi.SubItems.Add(item.owningPid.ToString());
+                    lvi.SubItems.Add(p == null ? "Unknown" : p.ProcessName);
+                    lvi.SubItems.Add(CountryCode);
+
+                    string hostEntry = string.Empty;
+                    try
+                    {
+                        IPHostEntry entry = Dns.GetHostEntry(string.Format("{0}.{1}.{2}.{3}", remoteAddr.b1, remoteAddr.b2, remoteAddr.b3, remoteAddr.b4));
+                        hostEntry = entry.HostName;
+                    }
+                    catch { }
+
+                    lvi.SubItems.Add(hostEntry);
+
+                    lvMain.Items.Add(lvi);
                 }
-
-                string remoteData = string.Format("{0}.{1}.{2}.{3}:{4}", remoteAddr.b1, remoteAddr.b2, remoteAddr.b3, remoteAddr.b4, item.remotePort1);
-                string localData = string.Format("{0}.{1}.{2}.{3}:{4}", localAddr.b1, localAddr.b2, localAddr.b3, localAddr.b4, localPort);
-
-                Process p = null;
-                try
-                {
-                    p = Process.GetProcessById(item.owningPid);
-                }
-                catch { }
-
-                ListViewItem lvi = new ListViewItem(remoteData);
-
-                //lvi.SubItems.Add(remoteData);
-                lvi.SubItems.Add(localData);
-                lvi.SubItems.Add(item.owningPid.ToString());
-                lvi.SubItems.Add(p == null ? "Unknown" : p.ProcessName);
-                lvi.SubItems.Add(CountryCode);
-
-                lvMain.Items.Add(lvi);
             }
         }
 

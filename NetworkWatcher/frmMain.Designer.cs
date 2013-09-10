@@ -34,6 +34,7 @@
             this.colPid = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colProcess = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colCountry = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colHost = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
             // 
             // lvMain
@@ -43,7 +44,8 @@
             this.colLocal,
             this.colPid,
             this.colProcess,
-            this.colCountry});
+            this.colCountry,
+            this.colHost});
             this.lvMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvMain.ForeColor = System.Drawing.SystemColors.WindowText;
             this.lvMain.Location = new System.Drawing.Point(0, 0);
@@ -57,23 +59,32 @@
             // 
             // colRemote
             // 
+            this.colRemote.DisplayIndex = 0;
             this.colRemote.Text = "Remote";
             // 
             // colLocal
             // 
+            this.colLocal.DisplayIndex = 1;
             this.colLocal.Text = "Local";
             // 
             // colPid
             // 
+            this.colPid.DisplayIndex = 2;
             this.colPid.Text = "PID";
             // 
             // colProcess
             // 
+            this.colProcess.DisplayIndex = 3;
             this.colProcess.Text = "Process";
             // 
             // colCountry
             // 
+            this.colCountry.DisplayIndex = 4;
             this.colCountry.Text = "Country";
+            // 
+            // colHost
+            // 
+            this.colHost.Text = "Host";
             // 
             // frmMain
             // 
@@ -97,6 +108,7 @@
         private System.Windows.Forms.ColumnHeader colProcess;
         private System.Windows.Forms.ColumnHeader colPid;
         private System.Windows.Forms.ColumnHeader colCountry;
+        private System.Windows.Forms.ColumnHeader colHost;
     }
 }
 
