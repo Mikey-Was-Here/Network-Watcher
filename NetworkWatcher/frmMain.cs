@@ -54,7 +54,18 @@ namespace NetworkWatcher
 
                     CountryCode = Program.Locations.Find(foundLoc);
 
-                    string remoteData = string.Format("{0}.{1}.{2}.{3}:{4}", remoteAddr.b1, remoteAddr.b2, remoteAddr.b3, remoteAddr.b4, item.remotePort1);
+                    string remoteData = 
+                        string.Format("{0}.{1}.{2}.{3}:{4}", 
+                            remoteAddr.b1, 
+                            remoteAddr.b2, 
+                            remoteAddr.b3, 
+                            remoteAddr.b4, 
+                            Functions.FirstNonZero(
+                                item.remotePort1, 
+                                item.remotePort2, 
+                                item.remotePort3, 
+                                item.remotePort4));
+
                     string localData = string.Format("{0}.{1}.{2}.{3}:{4}", localAddr.b1, localAddr.b2, localAddr.b3, localAddr.b4, localPort);
 
                     Process p = null;
@@ -89,6 +100,24 @@ namespace NetworkWatcher
 
         private void frmMain_Load(object sender, EventArgs e)
         {
+            string localName = Dns.GetHostName();
+            IPHostEntry localHost = Dns.GetHostEntry(localName);
+            IPAddress[] localAddress = localHost.AddressList;
+
+            for (int i = 0; i < localAddress.Length; i++)
+            {
+                string ipData = localAddress[i].AddressFamily.ToString() + " ";
+                foreach (byte b in localAddress[i].GetAddressBytes())
+                {
+                    if (ipData[ipData.Length - 1] != ' ') 
+                        ipData += ".";
+                    ipData += string.Format("{0}", b);
+                }
+                ListViewItem lvi = lvInfo.Items.Add("IP Address");
+                lvi.SubItems.Add(ipData);
+            }
+            
+
             LoadList();
         }
 
@@ -103,6 +132,12 @@ namespace NetworkWatcher
                 lvMain.Items.Clear();
                 LoadList();
             }
+        }
+
+        private void frmMain_Resize(object sender, EventArgs e)
+        {
+            lvInfo.Columns[0].Width = this.Width / 2;
+            lvInfo.Columns[1].Width = this.Width / 2;
         }
     }
 }

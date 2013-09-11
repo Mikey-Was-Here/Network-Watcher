@@ -13,5 +13,14 @@ namespace NetworkWatcher
             if (value.EndsWith("\"") && value.Length > 1) value = value.Substring(0, value.Length - 1);
             return value;
         }
+
+        public static int FirstNonZero(params int[] n)
+        {
+            for (int i = 0; i < n.Length; i++)
+            {
+                if (n[i] > 0) return n[i];
+            }
+            return 0;
+        }
     }
 }
