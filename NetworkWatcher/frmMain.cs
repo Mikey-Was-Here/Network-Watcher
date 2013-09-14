@@ -97,12 +97,28 @@ namespace NetworkWatcher
                 }
             }
         }
-
         private void frmMain_Load(object sender, EventArgs e)
         {
             string localName = Dns.GetHostName();
             IPHostEntry localHost = Dns.GetHostEntry(localName);
             IPAddress[] localAddress = localHost.AddressList;
+
+            IPAddress external = null;
+            for (int i = 1; i < 30; i++)
+            {
+                IPAddress ipa = Functions.Ping("www.google.com", i);
+                if (!Functions.IsLocal(ipa))
+                {
+                    external = ipa;
+                    break;
+                }
+            }
+
+            ListViewItem lvi = lvInfo.Items.Add("External Address");
+            if (external != null)
+            {
+                lvi.SubItems.Add(Functions.FormatIp(external));
+            }
 
             for (int i = 0; i < localAddress.Length; i++)
             {
@@ -113,7 +129,7 @@ namespace NetworkWatcher
                         ipData += ".";
                     ipData += string.Format("{0}", b);
                 }
-                ListViewItem lvi = lvInfo.Items.Add("IP Address");
+                lvi = lvInfo.Items.Add("IP Address");
                 lvi.SubItems.Add(ipData);
             }
             
