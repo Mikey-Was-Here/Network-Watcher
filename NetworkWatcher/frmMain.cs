@@ -31,9 +31,28 @@ namespace NetworkWatcher
 
     public partial class frmMain : Form
     {
+        public NotifyIcon Tray { get; private set; }
+
+        public void cmRefresh(Object sender, EventArgs e)
+        {
+            Console.Write("X");
+        }
+
+        public void cmExit(Object sender, EventArgs e)
+        {
+            Environment.Exit(0);
+        }
+
         public frmMain()
         {
             InitializeComponent();
+            Tray = new NotifyIcon();
+            ContextMenu cm = new System.Windows.Forms.ContextMenu();
+            cm.MenuItems.Add("&Refresh",cmRefresh);
+            cm.MenuItems.Add("E&xit", cmExit);
+            Tray.ContextMenu = cm;
+            Tray.Visible = true;
+            Tray.Icon = this.Icon;
         }
 
         private void LoadList()

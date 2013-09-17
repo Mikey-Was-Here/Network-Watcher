@@ -28,7 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.lvInfo = new System.Windows.Forms.ListView();
+            this.colLabel = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colInfo = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.lvMain = new System.Windows.Forms.ListView();
             this.colRemote = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colLocal = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -36,9 +40,6 @@
             this.colProcess = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colCountry = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colHost = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.lvInfo = new System.Windows.Forms.ListView();
-            this.colLabel = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.colInfo = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -62,6 +63,28 @@
             this.splitContainer1.Size = new System.Drawing.Size(426, 361);
             this.splitContainer1.SplitterDistance = 180;
             this.splitContainer1.TabIndex = 1;
+            // 
+            // lvInfo
+            // 
+            this.lvInfo.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.colLabel,
+            this.colInfo});
+            this.lvInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lvInfo.Location = new System.Drawing.Point(0, 0);
+            this.lvInfo.Name = "lvInfo";
+            this.lvInfo.Size = new System.Drawing.Size(426, 180);
+            this.lvInfo.TabIndex = 0;
+            this.lvInfo.UseCompatibleStateImageBehavior = false;
+            this.lvInfo.View = System.Windows.Forms.View.Details;
+            // 
+            // colLabel
+            // 
+            this.colLabel.Text = "Label";
+            this.colLabel.Width = 200;
+            // 
+            // colInfo
+            // 
+            this.colInfo.Text = "Info";
             // 
             // lvMain
             // 
@@ -106,34 +129,13 @@
             // 
             this.colHost.Text = "Host";
             // 
-            // lvInfo
-            // 
-            this.lvInfo.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.colLabel,
-            this.colInfo});
-            this.lvInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lvInfo.Location = new System.Drawing.Point(0, 0);
-            this.lvInfo.Name = "lvInfo";
-            this.lvInfo.Size = new System.Drawing.Size(426, 180);
-            this.lvInfo.TabIndex = 0;
-            this.lvInfo.UseCompatibleStateImageBehavior = false;
-            this.lvInfo.View = System.Windows.Forms.View.Details;
-            // 
-            // colLabel
-            // 
-            this.colLabel.Text = "Label";
-            this.colLabel.Width = 200;
-            // 
-            // colInfo
-            // 
-            this.colInfo.Text = "Info";
-            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(426, 361);
             this.Controls.Add(this.splitContainer1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmMain";
             this.Text = "Network Watcher";
             this.Load += new System.EventHandler(this.frmMain_Load);
