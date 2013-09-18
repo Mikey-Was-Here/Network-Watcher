@@ -35,7 +35,12 @@ namespace NetworkWatcher
 
         public void cmRefresh(Object sender, EventArgs e)
         {
-            Console.Write("X");
+            Color saved = lvMain.BackColor;
+            lvMain.BackColor = Color.Black;
+            lvMain.Refresh();
+            this.LoadList();
+            lvMain.BackColor = saved;
+            lvMain.Refresh();
         }
 
         public void cmExit(Object sender, EventArgs e)
