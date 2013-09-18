@@ -40,6 +40,7 @@
             this.colProcess = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colCountry = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colHost = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colOwner = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -60,7 +61,7 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.lvMain);
-            this.splitContainer1.Size = new System.Drawing.Size(426, 361);
+            this.splitContainer1.Size = new System.Drawing.Size(503, 361);
             this.splitContainer1.SplitterDistance = 180;
             this.splitContainer1.TabIndex = 1;
             // 
@@ -72,7 +73,7 @@
             this.lvInfo.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvInfo.Location = new System.Drawing.Point(0, 0);
             this.lvInfo.Name = "lvInfo";
-            this.lvInfo.Size = new System.Drawing.Size(426, 180);
+            this.lvInfo.Size = new System.Drawing.Size(503, 180);
             this.lvInfo.TabIndex = 0;
             this.lvInfo.UseCompatibleStateImageBehavior = false;
             this.lvInfo.View = System.Windows.Forms.View.Details;
@@ -94,13 +95,14 @@
             this.colPid,
             this.colProcess,
             this.colCountry,
-            this.colHost});
+            this.colHost,
+            this.colOwner});
             this.lvMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvMain.ForeColor = System.Drawing.SystemColors.WindowText;
             this.lvMain.Location = new System.Drawing.Point(0, 0);
             this.lvMain.MultiSelect = false;
             this.lvMain.Name = "lvMain";
-            this.lvMain.Size = new System.Drawing.Size(426, 177);
+            this.lvMain.Size = new System.Drawing.Size(503, 177);
             this.lvMain.TabIndex = 1;
             this.lvMain.UseCompatibleStateImageBehavior = false;
             this.lvMain.View = System.Windows.Forms.View.Details;
@@ -129,11 +131,16 @@
             // 
             this.colHost.Text = "Host";
             // 
+            // colOwner
+            // 
+            this.colOwner.Text = "Owner";
+            this.colOwner.Width = 135;
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(426, 361);
+            this.ClientSize = new System.Drawing.Size(503, 361);
             this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmMain";
@@ -162,6 +169,7 @@
         private System.Windows.Forms.ColumnHeader colProcess;
         private System.Windows.Forms.ColumnHeader colCountry;
         private System.Windows.Forms.ColumnHeader colHost;
+        private System.Windows.Forms.ColumnHeader colOwner;
 
     }
 }

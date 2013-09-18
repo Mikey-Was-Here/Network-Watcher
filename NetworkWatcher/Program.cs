@@ -23,6 +23,8 @@ namespace NetworkWatcher
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
+            string data = ArinApi.GetOrginization(new System.Net.IPAddress(new byte[] { 1,1,1,1 } ));
+
             string dataFile = Path.Combine(Entity.Config.DataPath, "Country.csv");
             Countries countries = new Countries(dataFile);
 

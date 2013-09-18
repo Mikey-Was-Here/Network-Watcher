@@ -1,0 +1,21 @@
+﻿<net xmlns="http://www.arin.net/whoisrws/core/v1" xmlns:ns2="http://www.arin.net/whoisrws/rdns/v1" xmlns:ns3="http://www.arin.net/whoisrws/netref/v2" termsOfUse="https://www.arin.net/whois_tou.html">
+  <registrationDate>2001-02-14T00:00:00-05:00</registrationDate>
+  <ref>http://whois.arin.net/rest/net/NET-65-52-0-0-1</ref>
+  <endAddress>65.55.255.255</endAddress>
+  <handle>NET-65-52-0-0-1</handle>
+  <name>MICROSOFT-1BLK</name>
+  <netBlocks>
+    <netBlock>
+      <cidrLength>14</cidrLength>
+      <endAddress>65.55.255.255</endAddress>
+      <description>Direct Assignment</description>
+      <type>DS</type>
+      <startAddress>65.52.0.0</startAddress>
+    </netBlock>
+  </netBlocks>
+  <orgRef name="Microsoft Corporation" handle="MSFT">http://whois.arin.net/rest/org/MSFT</orgRef>
+  <parentNetRef name="NET65" handle="NET-65-0-0-0-0">http://whois.arin.net/rest/net/NET-65-0-0-0-0</parentNetRef>
+  <startAddress>65.52.0.0</startAddress>
+  <updateDate>2013-08-20T21:18:32-04:00</updateDate>
+  <version>4</version>
+</net>

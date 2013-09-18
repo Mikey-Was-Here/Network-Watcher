@@ -117,6 +117,8 @@ namespace NetworkWatcher
 
                     lvi.SubItems.Add(hostEntry);
 
+                    lvi.SubItems.Add(ArinApi.GetOrginization(new IPAddress(new byte[] { remoteAddr.b1, remoteAddr.b2, remoteAddr.b3, remoteAddr.b4 } )));
+
                     lvMain.Items.Add(lvi);
                 }
             }
