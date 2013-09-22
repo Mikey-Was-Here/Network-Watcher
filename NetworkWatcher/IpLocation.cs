@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace NetworkWatcher
+﻿namespace NetworkWatcher
 {
-    class IpLocation
+    internal class IpLocation
     {
         public int fromIp;
         public int toIp;

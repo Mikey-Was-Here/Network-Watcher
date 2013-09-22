@@ -1,30 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using System.Runtime.InteropServices;
 using System.Diagnostics;
-using System.Net.NetworkInformation;
+using System.Drawing;
 using System.Net;
-using System.Net.Sockets;
+using System.Runtime.InteropServices;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace NetworkWatcher
 {
     [StructLayout(LayoutKind.Explicit)]
-    struct ip4
+    internal struct ip4
     {
         [FieldOffset(0)]
         public byte b1;
+
         [FieldOffset(1)]
         public byte b2;
+
         [FieldOffset(2)]
         public byte b3;
+
         [FieldOffset(3)]
         public byte b4;
+
         [FieldOffset(0)]
         public uint u;
     }
@@ -32,6 +30,9 @@ namespace NetworkWatcher
     public partial class frmMain : Form
     {
         public NotifyIcon Tray { get; private set; }
+
+        private SetHostNameDelegate shnd = SetHostName;
+        private FillInArinInfoDelegate fhnd = SetArinInfo;
 
         public void cmRefresh(Object sender, EventArgs e)
         {
@@ -53,11 +54,45 @@ namespace NetworkWatcher
             InitializeComponent();
             Tray = new NotifyIcon();
             ContextMenu cm = new System.Windows.Forms.ContextMenu();
-            cm.MenuItems.Add("&Refresh",cmRefresh);
+            cm.MenuItems.Add("&Refresh", cmRefresh);
             cm.MenuItems.Add("E&xit", cmExit);
             Tray.ContextMenu = cm;
             Tray.Visible = true;
             Tray.Icon = this.Icon;
+        }
+
+        public static void SetHostName(ListViewItem lvi, string hostName)
+        {
+            lvi.SubItems[5].Text = hostName;
+        }
+
+        public delegate void SetHostNameDelegate(ListViewItem lvi, string hostName);
+
+        public void FillInHostName(ListViewItem lvi, IPAddress ipa)
+        {
+            string hostName = string.Empty;
+            try
+            {
+                IPHostEntry entry = Dns.GetHostEntry(ipa);
+                hostName = entry.HostName;
+            }
+            catch { }
+
+            this.Invoke(shnd, lvi, hostName);
+        }
+
+        public delegate void FillInArinInfoDelegate(ListViewItem lvi, string hostName);
+
+        public static void SetArinInfo(ListViewItem lvi, string ArinInfo)
+        {
+            lvi.SubItems[6].Text = ArinInfo;
+        }
+
+        public void FillInArinInfo(ListViewItem lvi, IPAddress ipa)
+        {
+            string ArinInfo = ArinApi.GetOrginization(ipa);
+
+            this.Invoke(fhnd, lvi, ArinInfo);
         }
 
         private void LoadList()
@@ -78,16 +113,16 @@ namespace NetworkWatcher
 
                     CountryCode = Program.Locations.Find(foundLoc);
 
-                    string remoteData = 
-                        string.Format("{0}.{1}.{2}.{3}:{4}", 
-                            remoteAddr.b1, 
-                            remoteAddr.b2, 
-                            remoteAddr.b3, 
-                            remoteAddr.b4, 
+                    string remoteData =
+                        string.Format("{0}.{1}.{2}.{3}:{4}",
+                            remoteAddr.b1,
+                            remoteAddr.b2,
+                            remoteAddr.b3,
+                            remoteAddr.b4,
                             Functions.FirstNonZero(
-                                item.remotePort1, 
-                                item.remotePort2, 
-                                item.remotePort3, 
+                                item.remotePort1,
+                                item.remotePort2,
+                                item.remotePort3,
                                 item.remotePort4));
 
                     string localData = string.Format("{0}.{1}.{2}.{3}:{4}", localAddr.b1, localAddr.b2, localAddr.b3, localAddr.b4, localPort);
@@ -107,6 +142,16 @@ namespace NetworkWatcher
                     lvi.SubItems.Add(p == null ? "Unknown" : p.ProcessName);
                     lvi.SubItems.Add(CountryCode);
 
+                    lvi.SubItems.Add(string.Empty);
+
+                    IPAddress ipa = new IPAddress(new byte[] { remoteAddr.b1, remoteAddr.b2, remoteAddr.b3, remoteAddr.b4 });
+
+                    lvi.SubItems.Add(string.Empty);
+
+                    Task.Run(() => { FillInHostName(lvi, ipa); });
+                    Task.Run(() => { FillInArinInfo(lvi, ipa); });
+
+                    /*
                     string hostEntry = string.Empty;
                     try
                     {
@@ -115,14 +160,14 @@ namespace NetworkWatcher
                     }
                     catch { }
 
-                    lvi.SubItems.Add(hostEntry);
-
-                    lvi.SubItems.Add(ArinApi.GetOrginization(new IPAddress(new byte[] { remoteAddr.b1, remoteAddr.b2, remoteAddr.b3, remoteAddr.b4 } )));
+                     lvi.SubItems.Add(hostEntry);
+                     */
 
                     lvMain.Items.Add(lvi);
                 }
             }
         }
+
         private void frmMain_Load(object sender, EventArgs e)
         {
             string localName = Dns.GetHostName();
@@ -151,14 +196,13 @@ namespace NetworkWatcher
                 string ipData = localAddress[i].AddressFamily.ToString() + " ";
                 foreach (byte b in localAddress[i].GetAddressBytes())
                 {
-                    if (ipData[ipData.Length - 1] != ' ') 
+                    if (ipData[ipData.Length - 1] != ' ')
                         ipData += ".";
                     ipData += string.Format("{0}", b);
                 }
                 lvi = lvInfo.Items.Add("IP Address");
                 lvi.SubItems.Add(ipData);
             }
-            
 
             LoadList();
         }

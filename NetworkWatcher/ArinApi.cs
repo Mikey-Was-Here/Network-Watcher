@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text;
-using System.Linq;
 using System.Xml.Linq;
-using System.Net.Http.Headers;
-
 
 namespace NetworkWatcher
 {
-    class ArinApi
+    internal class ArinApi
     {
         public static string GetOrginization(IPAddress ipa)
         {
@@ -27,6 +22,5 @@ namespace NetworkWatcher
             string OrgName = (from el in xdoc.Descendants() where el.Name.LocalName == "orgRef" select el.Attribute("name").Value).FirstOrDefault();
             return OrgName;
         }
-        
     }
 }

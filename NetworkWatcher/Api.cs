@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Runtime.InteropServices;
 
 namespace NetworkWatcher
 {
-    class Api
+    internal class Api
     {
         [StructLayout(LayoutKind.Sequential)]
         public struct MIB_TCPROW_OWNER_PID
@@ -25,22 +22,27 @@ namespace NetworkWatcher
             public int owningPid;
         }
 
-        [StructLayout(LayoutKind.Explicit, Size=8)]
-        struct LARGE_INTEGER
+        [StructLayout(LayoutKind.Explicit, Size = 8)]
+        private struct LARGE_INTEGER
         {
-            [FieldOffset(0)]public Int64 QuadPart;
-            [FieldOffset(0)]public UInt32 LowPart;
-            [FieldOffset(4)]public Int32 HighPart;
+            [FieldOffset(0)]
+            public Int64 QuadPart;
+
+            [FieldOffset(0)]
+            public UInt32 LowPart;
+
+            [FieldOffset(4)]
+            public Int32 HighPart;
         }
 
         [StructLayout(LayoutKind.Sequential)]
         public struct MIB_TCPTABLE_OWNER_PID
         {
             public uint dwNumEntries;
-            MIB_TCPROW_OWNER_PID table;
+            private MIB_TCPROW_OWNER_PID table;
         }
 
-        enum TCP_TABLE_CLASS
+        private enum TCP_TABLE_CLASS
         {
             TCP_TABLE_BASIC_LISTENER,
             TCP_TABLE_BASIC_CONNECTIONS,
@@ -54,7 +56,7 @@ namespace NetworkWatcher
         }
 
         [DllImport("iphlpapi.dll", SetLastError = true)]
-        static extern uint GetExtendedTcpTable(IntPtr pTcpTable, ref int dwOutBufLen, bool sort, int ipVersion, TCP_TABLE_CLASS tblClass, int reserved);
+        private static extern uint GetExtendedTcpTable(IntPtr pTcpTable, ref int dwOutBufLen, bool sort, int ipVersion, TCP_TABLE_CLASS tblClass, int reserved);
 
         //public TcpRow[] GetAllTcpConnections()
         public static MIB_TCPROW_OWNER_PID[] GetAllTcpConnections()
@@ -86,7 +88,7 @@ namespace NetworkWatcher
                 //tTable = new TcpRow[tab.numberOfEntries];
                 tTable = new MIB_TCPROW_OWNER_PID[tab.dwNumEntries];
 
-                //for (int i = 0; i < tab.numberOfEntries; i++)        
+                //for (int i = 0; i < tab.numberOfEntries; i++)
                 for (int i = 0; i < tab.dwNumEntries; i++)
                 {
                     //MibTcpRow_Owner_Pid tcpRow = (MibTcpRow_Owner_Pid)Marshal.PtrToStructure(rowPtr, typeof(MibTcpRow_Owner_Pid));
@@ -95,7 +97,6 @@ namespace NetworkWatcher
                     tTable[i] = tcpRow;
                     rowPtr = (IntPtr)((long)rowPtr + Marshal.SizeOf(tcpRow));   // next entry
                 }
-
             }
             finally
             {
@@ -103,10 +104,7 @@ namespace NetworkWatcher
                 Marshal.FreeHGlobal(buffTable);
             }
 
-
-
             return tTable;
         }
-
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace NetworkWatcher.Entity
 {
@@ -47,6 +46,5 @@ namespace NetworkWatcher.Entity
 
             return this[locId].Country;
         }
-
     }
 }

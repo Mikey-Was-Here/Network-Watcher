@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace NetworkWatcher.Entity
 {
-    class Countries : SortedDictionary<string, Country>
+    internal class Countries : SortedDictionary<string, Country>
     {
         public Countries(string fileName)
         {

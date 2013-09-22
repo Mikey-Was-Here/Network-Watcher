@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Net.NetworkInformation;
 
 namespace NetworkWatcher
@@ -43,12 +40,11 @@ namespace NetworkWatcher
 
         public static bool IsLocal(IPAddress ipa)
         {
-            
             byte[] bytes = ipa.GetAddressBytes();
             if (bytes.Length == 4)
             {
                 // 10.0.0.0–10.255.255.255 - Single Class A
-                if (bytes[0] == 10) 
+                if (bytes[0] == 10)
                     return true;
                 // 172.16.0.0–172.31.255.255 - Contiguous range of 16 Class B blocks
                 if (bytes[0] == 172 && (bytes[1] >= 16 && bytes[1] <= 31))
