@@ -70,7 +70,6 @@
     </Compile>
     <Compile Include="Functions.cs" />
     <Compile Include="IPHlpAPI32.cs" />
-    <Compile Include="IpLocation.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="win32API.cs" />

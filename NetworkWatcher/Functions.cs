@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Net.NetworkInformation;
+using System.Net.Sockets;
 
 namespace NetworkWatcher
 {
@@ -75,12 +76,30 @@ namespace NetworkWatcher
 
         public static string FormatIp(IPAddress ipa)
         {
-            string ipData = ipa.AddressFamily.ToString() + " ";
-            foreach (byte b in ipa.GetAddressBytes())
+            string ipData = string.Empty;
+            if (ipa.AddressFamily == AddressFamily.InterNetwork)
             {
-                if (ipData[ipData.Length - 1] != ' ')
-                    ipData += ".";
-                ipData += string.Format("{0}", b);
+                ipData = "IPv4";
+                foreach (byte b in ipa.GetAddressBytes())
+                {
+                    if (ipData[ipData.Length - 1] != ' ')
+                        ipData += ".";
+                    ipData += string.Format("{0}", b);
+                }
+            }
+            else
+            {
+                ipData = "IPv6";
+                byte[] bytes = ipa.GetAddressBytes();
+                for (int i = 0; i < bytes.Length; i = i + 2)
+                {
+                    if (ipData[ipData.Length - 1] != ' ')
+                        ipData += ":";
+                    byte b = bytes[i];
+                    ipData += string.Format("{0:X2}", b);
+                    b = bytes[i+1];
+                    ipData += string.Format("{0:X2}", b);
+                }
             }
             return ipData;
         }

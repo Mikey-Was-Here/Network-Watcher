@@ -174,34 +174,31 @@ namespace NetworkWatcher
             IPHostEntry localHost = Dns.GetHostEntry(localName);
             IPAddress[] localAddress = localHost.AddressList;
 
-            IPAddress external = null;
-            for (int i = 1; i < 30; i++)
+            try
             {
-                IPAddress ipa = Functions.Ping("www.google.com", i);
-                if (!Functions.IsLocal(ipa))
+                IPAddress external = null;
+                for (int i = 1; i < 30; i++)
                 {
-                    external = ipa;
-                    break;
+                    IPAddress ipa = Functions.Ping("www.google.com", i);
+                    if (!Functions.IsLocal(ipa))
+                    {
+                        external = ipa;
+                        break;
+                    }
+                }
+
+                if (external != null)
+                {
+                    ListViewItem lvi = lvInfo.Items.Add("External Address");
+                    lvi.SubItems.Add(Functions.FormatIp(external));
                 }
             }
-
-            ListViewItem lvi = lvInfo.Items.Add("External Address");
-            if (external != null)
-            {
-                lvi.SubItems.Add(Functions.FormatIp(external));
-            }
+            catch { }
 
             for (int i = 0; i < localAddress.Length; i++)
             {
-                string ipData = localAddress[i].AddressFamily.ToString() + " ";
-                foreach (byte b in localAddress[i].GetAddressBytes())
-                {
-                    if (ipData[ipData.Length - 1] != ' ')
-                        ipData += ".";
-                    ipData += string.Format("{0}", b);
-                }
-                lvi = lvInfo.Items.Add("IP Address");
-                lvi.SubItems.Add(ipData);
+                ListViewItem lvi = lvInfo.Items.Add("Local Address");
+                lvi.SubItems.Add(Functions.FormatIp(localAddress[i]));
             }
 
             LoadList();
