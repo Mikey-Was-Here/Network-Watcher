@@ -2,6 +2,7 @@
 using System.IO;
 using System.Windows.Forms;
 using NetworkWatcher.Entity;
+using System.Threading.Tasks;
 
 namespace NetworkWatcher
 {
@@ -27,13 +28,25 @@ namespace NetworkWatcher
             //string data = ArinApi.GetOrginization(new System.Net.IPAddress(new byte[] { 1,1,1,1 } ));
 
             string dataFile = Path.Combine(Entity.Config.DataPath, "Country.csv");
-            Countries countries = new Countries(dataFile);
+            CountryInfos countries = new CountryInfos();
+            Task t1 = countries.Read(dataFile);
 
             dataFile = Path.Combine(Entity.Config.DataPath, "GeoLiteCity-Blocks.csv");
-            ipBlocks = new IpBlocks(dataFile);
+            Task t2 = new Task(() =>
+            {
+                ipBlocks = new IpBlocks(dataFile);
+            });
 
             dataFile = Path.Combine(Entity.Config.DataPath, "GeoLiteCity-Location.csv");
-            locations = new Locations(dataFile);
+            Task t3 = new Task(() =>
+            {
+                locations = new Locations(dataFile);
+            });
+            t1.Start();
+            t2.Start();
+            t3.Start();
+
+            Task.WaitAll(t1, t2, t3);
 
             Application.Run(new frmMain());
         }

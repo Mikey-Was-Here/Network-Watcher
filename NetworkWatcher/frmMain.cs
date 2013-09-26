@@ -219,8 +219,7 @@ namespace NetworkWatcher
 
         private void frmMain_Resize(object sender, EventArgs e)
         {
-            lvInfo.Columns[0].Width = this.Width / 2;
-            lvInfo.Columns[1].Width = this.Width / 2;
+            lvInfo.Columns[0].Width = lvInfo.Columns[1].Width = (this.Width - 2) / 2;
         }
     }
 }
