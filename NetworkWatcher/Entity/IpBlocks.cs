@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace NetworkWatcher.Entity
 {
@@ -9,28 +10,28 @@ namespace NetworkWatcher.Entity
     {
         public IpBlocks(string fileName)
         {
-            foreach (string line in File.ReadAllLines(fileName))
+            Parallel.ForEach(File.ReadAllLines(fileName), (string line) =>
             {
                 string[] items = line.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
-                if (items.Length < 3)
-                    continue;
-
-                long fromIp;
-                if (long.TryParse(Functions.RemoveQuotes(items[0]), out fromIp))
+                if (items.Length >= 3)
                 {
-                    long toIp;
-                    if (long.TryParse(Functions.RemoveQuotes(items[1]), out toIp))
+                    long fromIp;
+                    if (long.TryParse(Functions.RemoveQuotes(items[0]), out fromIp))
                     {
-                        int loc;
-                        if (int.TryParse(Functions.RemoveQuotes(items[2]), out loc))
+                        long toIp;
+                        if (long.TryParse(Functions.RemoveQuotes(items[1]), out toIp))
                         {
-                            IpBlock ipBlock = new IpBlock(fromIp, toIp, loc);
-                            this.Add(fromIp, ipBlock);
+                            int loc;
+                            if (int.TryParse(Functions.RemoveQuotes(items[2]), out loc))
+                            {
+                                IpBlock ipBlock = new IpBlock(fromIp, toIp, loc);
+                                this.Add(fromIp, ipBlock);
+                            }
                         }
                     }
                 }
-            }
+            });
         }
 
         public int Find(long ip)

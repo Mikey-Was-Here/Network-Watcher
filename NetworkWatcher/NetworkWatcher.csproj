@@ -55,7 +55,7 @@
   <ItemGroup>
     <Compile Include="Api.cs" />
     <Compile Include="ArinApi.cs" />
-    <Compile Include="Entity\CountryInfo.cs" />
+    <Compile Include="Entity\Country.cs" />
     <Compile Include="Entity\Config.cs" />
     <Compile Include="Entity\IpBlock.cs" />
     <Compile Include="Entity\IpBlocks.cs" />
@@ -73,6 +73,12 @@
     <Compile Include="IpInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Splash.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Splash.Designer.cs">
+      <DependentUpon>Splash.cs</DependentUpon>
+    </Compile>
     <Compile Include="win32API.cs" />
     <EmbeddedResource Include="frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
@@ -87,6 +93,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="Splash.resx">
+      <DependentUpon>Splash.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="app.config" />
     <None Include="Data\GeoLiteCity-Blocks.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -112,6 +121,8 @@
   <ItemGroup>
     <Content Include="Arin.xml" />
     <Content Include="nw.ico" />
+    <Content Include="world.jpg" />
+    <Content Include="world640.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

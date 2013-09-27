@@ -1,4 +1,5 @@
-﻿using System;
+﻿using System.Diagnostics;
+using System;
 using System.IO;
 using System.Windows.Forms;
 using NetworkWatcher.Entity;
@@ -25,28 +26,38 @@ namespace NetworkWatcher
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            //string data = ArinApi.GetOrginization(new System.Net.IPAddress(new byte[] { 1,1,1,1 } ));
+            Splash splash = new Splash();
+            splash.Show();
 
+            //string data = ArinApi.GetOrginization(new System.Net.IPAddress(new byte[] { 1,1,1,1 } ));
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
             string dataFile = Path.Combine(Entity.Config.DataPath, "Country.csv");
-            CountryInfos countries = new CountryInfos();
-            Task t1 = countries.Read(dataFile);
+            Task t1 = new Task(() =>
+            {
+                Countries countries = new Countries(dataFile);
+            });
+            t1.Start();
 
             dataFile = Path.Combine(Entity.Config.DataPath, "GeoLiteCity-Blocks.csv");
             Task t2 = new Task(() =>
             {
                 ipBlocks = new IpBlocks(dataFile);
             });
+            t2.Start();
 
             dataFile = Path.Combine(Entity.Config.DataPath, "GeoLiteCity-Location.csv");
             Task t3 = new Task(() =>
             {
                 locations = new Locations(dataFile);
             });
-            t1.Start();
-            t2.Start();
-            t3.Start();
-
+            t3.Start(); 
+            
             Task.WaitAll(t1, t2, t3);
+
+            splash.Hide();
+
+            MessageBox.Show("Elapsed: " + sw.ElapsedMilliseconds.ToString("#,##0"));
 
             Application.Run(new frmMain());
         }
