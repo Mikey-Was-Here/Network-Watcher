@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="Api.cs" />
     <Compile Include="ArinApi.cs" />
+    <Compile Include="GeoLocationApi.cs" />
     <Compile Include="Entity\Country.cs" />
     <Compile Include="Entity\Config.cs" />
     <Compile Include="Entity\IpBlock.cs" />

@@ -8,6 +8,7 @@ namespace NetworkWatcher.Entity
 {
     internal class IpBlocks : SortedDictionary<long, IpBlock>
     {
+        private static object lo = new object();
         public IpBlocks(string fileName)
         {
             Parallel.ForEach(File.ReadAllLines(fileName), (string line) =>
@@ -26,7 +27,10 @@ namespace NetworkWatcher.Entity
                             if (int.TryParse(Functions.RemoveQuotes(items[2]), out loc))
                             {
                                 IpBlock ipBlock = new IpBlock(fromIp, toIp, loc);
-                                this.Add(fromIp, ipBlock);
+                                lock (lo)
+                                {
+                                    this.Add(fromIp, ipBlock);
+                                }
                             }
                         }
                     }

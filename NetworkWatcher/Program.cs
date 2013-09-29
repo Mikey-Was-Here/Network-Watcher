@@ -11,11 +11,15 @@ namespace NetworkWatcher
     {
         private static IpBlocks ipBlocks = null;
 
-        public static IpBlocks Iplocks { get { return ipBlocks; } }
+        public static IpBlocks IpBlocks { get { return ipBlocks; } }
 
         private static Locations locations = null;
 
         public static Locations Locations { get { return locations; } }
+
+        private static Countries countries = null;
+
+        public static Countries Countries { get { return countries; } }
 
         /// <summary>
         /// The main entry point for the application.
@@ -32,32 +36,30 @@ namespace NetworkWatcher
             //string data = ArinApi.GetOrginization(new System.Net.IPAddress(new byte[] { 1,1,1,1 } ));
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            string dataFile = Path.Combine(Entity.Config.DataPath, "Country.csv");
+            string countryDataFile = Path.Combine(Entity.Config.DataPath, "Country.csv");
             Task t1 = new Task(() =>
             {
-                Countries countries = new Countries(dataFile);
+                countries = new Countries(countryDataFile);
             });
             t1.Start();
 
-            dataFile = Path.Combine(Entity.Config.DataPath, "GeoLiteCity-Blocks.csv");
-            Task t2 = new Task(() =>
-            {
-                ipBlocks = new IpBlocks(dataFile);
-            });
-            t2.Start();
+            //string ipBlocksDataFile = Path.Combine(Entity.Config.DataPath, "GeoLiteCity-Blocks.csv");
+            //Task t2 = new Task(() =>
+            //{
+            //    ipBlocks = new IpBlocks(ipBlocksDataFile);
+            //});
+            //t2.Start();
 
-            dataFile = Path.Combine(Entity.Config.DataPath, "GeoLiteCity-Location.csv");
-            Task t3 = new Task(() =>
-            {
-                locations = new Locations(dataFile);
-            });
-            t3.Start(); 
+            //string locationDataFile = Path.Combine(Entity.Config.DataPath, "GeoLiteCity-Location.csv");
+            //Task t3 = new Task(() =>
+            //{
+            //    locations = new Locations(locationDataFile);
+            //});
+            //t3.Start(); 
             
-            Task.WaitAll(t1, t2, t3);
+            Task.WaitAll(t1);
 
             splash.Hide();
-
-            MessageBox.Show("Elapsed: " + sw.ElapsedMilliseconds.ToString("#,##0"));
 
             Application.Run(new frmMain());
         }

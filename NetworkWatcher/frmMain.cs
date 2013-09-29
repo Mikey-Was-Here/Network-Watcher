@@ -33,6 +33,7 @@ namespace NetworkWatcher
 
         private SetHostNameDelegate shnd = SetHostName;
         private FillInArinInfoDelegate fhnd = SetArinInfo;
+        private SetProcessNameDelegate spnd = SetProcessName;
 
         public void cmRefresh(Object sender, EventArgs e)
         {
@@ -95,6 +96,25 @@ namespace NetworkWatcher
             this.Invoke(fhnd, lvi, ArinInfo);
         }
 
+        public delegate void SetProcessNameDelegate(ListViewItem lvi, string hostName);
+
+        public static void SetProcessName(ListViewItem lvi, string processName)
+        {
+            lvi.SubItems[3].Text = processName;
+        }
+
+        public void FillInProcessName(ListViewItem lvi, int pid)
+        {
+            Process p = null;
+            try
+            {
+                p = Process.GetProcessById(pid);
+            }
+            catch { }
+
+            this.Invoke(spnd, lvi, p == null ? "Unknown" : p.ProcessName); 
+        }
+
         private void LoadList()
         {
             Api.MIB_TCPROW_OWNER_PID[] cn = Api.GetAllTcpConnections();
@@ -107,11 +127,20 @@ namespace NetworkWatcher
 
                 string CountryCode = string.Empty;
 
-                if (item.remoteAddr != 0 && remoteAddr.b1 != 127 && remoteAddr.b1 != 192)
+                if (item.remoteAddr != 0 && remoteAddr.b1 != 127 && (!(remoteAddr.b1 == 192 && remoteAddr.b2 == 168)))
                 {
-                    int foundLoc = Program.Iplocks.Find((long)item.remoteAddr);
+                    IPAddress ipa = new IPAddress(new byte[] { remoteAddr.b1, remoteAddr.b2, remoteAddr.b3, remoteAddr.b4 }); 
+                    
+                    GeoLocationData geoData = GeoLocationApi.GetLocation(ipa);
 
-                    CountryCode = Program.Locations.Find(foundLoc);
+
+                    //CountryCode = Program.Locations.Find(foundLoc);
+
+                    //string CountryName = string.Empty;
+                    //if (Program.Countries.ContainsKey(geoData.CountryCode))
+                    //{
+                    //    //CountryName = Program.Countries[CountryCode].Name;
+                    //}
 
                     string remoteData =
                         string.Format("{0}.{1}.{2}.{3}:{4}",
@@ -127,24 +156,21 @@ namespace NetworkWatcher
 
                     string localData = string.Format("{0}.{1}.{2}.{3}:{4}", localAddr.b1, localAddr.b2, localAddr.b3, localAddr.b4, localPort);
 
-                    Process p = null;
-                    try
-                    {
-                        p = Process.GetProcessById(item.owningPid);
-                    }
-                    catch { }
-
                     ListViewItem lvi = new ListViewItem(remoteData);
 
                     //lvi.SubItems.Add(remoteData);
                     lvi.SubItems.Add(localData);
                     lvi.SubItems.Add(item.owningPid.ToString());
-                    lvi.SubItems.Add(p == null ? "Unknown" : p.ProcessName);
-                    lvi.SubItems.Add(CountryCode);
 
                     lvi.SubItems.Add(string.Empty);
 
-                    IPAddress ipa = new IPAddress(new byte[] { remoteAddr.b1, remoteAddr.b2, remoteAddr.b3, remoteAddr.b4 });
+                    Task.Run(() => { FillInProcessName(lvi, item.owningPid); });
+
+                    lvi.SubItems.Add(geoData.CountryCode + "/" + geoData.CountryName + "/" +
+                        (string.IsNullOrEmpty(geoData.RegionName) ? string.Empty : geoData.RegionName) + "/" +
+                        (string.IsNullOrEmpty(geoData.City) ? string.Empty : geoData.City));
+
+                    lvi.SubItems.Add(string.Empty);
 
                     lvi.SubItems.Add(string.Empty);
 
