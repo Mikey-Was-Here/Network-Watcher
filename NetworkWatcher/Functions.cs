@@ -97,7 +97,7 @@ namespace NetworkWatcher
                         ipData += ":";
                     byte b = bytes[i];
                     ipData += string.Format("{0:X2}", b);
-                    b = bytes[i+1];
+                    b = bytes[i + 1];
                     ipData += string.Format("{0:X2}", b);
                 }
             }

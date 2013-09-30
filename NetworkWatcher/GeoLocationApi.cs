@@ -1,8 +1,7 @@
-﻿using System.Linq;
+﻿using System.Collections.Concurrent;
 using System.Net;
 using System.Net.Http;
 using System.Xml.Linq;
-using System.Collections.Concurrent;
 
 namespace NetworkWatcher
 {
