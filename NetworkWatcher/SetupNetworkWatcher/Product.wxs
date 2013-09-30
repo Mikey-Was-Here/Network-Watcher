@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Product Id="*" Name="Network Watcher" Language="1033" Version="1.0.0.0"
+           Manufacturer="Michael R. Schmidt" 
+           UpgradeCode="767e3dee-d33c-4604-b406-f4538be18c40">
+    
+    <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+    <PropertyRef Id="NETFRAMEWORK45"/>
+    <Condition Message='This setup requires the .NET Framework 4.5 installed.'>
+      <![CDATA[Installed OR NETFRAMEWORK45]]>
+    </Condition>
+
+    <UIRef Id="WixUI_Mondo" />
+
+    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+    <MediaTemplate CompressionLevel="high" EmbedCab="yes" />
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="INSTALLFOLDER" Name="Network Watcher"/>
+      </Directory>
+    </Directory>
+
+    <Feature Id="ProductFeature" Title="Network Watcher"
+             Description="Complete Network Watcher"
+             Display="expand"
+             Level="1"
+             ConfigurableDirectory="INSTALLFOLDER" >
+      <ComponentGroupRef Id="NetworkWatcher.Files" />
+    </Feature>
+  </Product>
+
+  <Fragment>
+    <DirectoryRef Id="INSTALLFOLDER">
+      <Component Id="binaries" Guid="{D276AF01-CD6B-423E-9119-66232AF3724E}">
+        <File Id="NetworkWatcher.exe" Source="..\bin\debug\NetworkWatcher.exe" />
+      </Component>
+      <Component Id="configs" Guid="{A8AFDE26-B066-47C4-AA84-9D96C68128C0}">
+        <File Id="NetworkWatcher.exe.config" Source="..\bin\debug\NetworkWatcher.exe.config" />
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+  
+  <Fragment>
+    <ComponentGroup Id="NetworkWatcher.Files">
+      <ComponentRef Id="binaries" />
+      <ComponentRef Id="configs" />
+    </ComponentGroup>
+  </Fragment>
+</Wix>
