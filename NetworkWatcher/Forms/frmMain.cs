@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Win32;
+using NetworkWatcher.Entity;
 
 namespace NetworkWatcher.Forms
 {
@@ -141,6 +142,10 @@ namespace NetworkWatcher.Forms
                 if (!string.IsNullOrEmpty(geoData.RegionName) && !string.IsNullOrEmpty(geoData.City))
                 {
                     data += "/" + geoData.RegionName + "/" + geoData.City;
+                    if (geoData.Longitude.HasValue && geoData.Latitude.HasValue)
+                    {
+                        data += "/" + geoData.Longitude.Value + "/" + geoData.Latitude.Value;
+                    }
                 }
             }
             else

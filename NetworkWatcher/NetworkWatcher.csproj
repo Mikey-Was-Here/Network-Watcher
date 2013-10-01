@@ -57,6 +57,7 @@
   <ItemGroup>
     <Compile Include="Api.cs" />
     <Compile Include="ArinApi.cs" />
+    <Compile Include="Entity\GeoLocationData.cs" />
     <Compile Include="Forms\frmAbout.cs">
       <SubType>Form</SubType>
     </Compile>

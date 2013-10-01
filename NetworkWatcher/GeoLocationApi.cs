@@ -2,24 +2,10 @@
 using System.Net;
 using System.Net.Http;
 using System.Xml.Linq;
+using NetworkWatcher.Entity;
 
 namespace NetworkWatcher
 {
-    public class GeoLocationData
-    {
-        public IPAddress IpAddress;
-        public string CountryCode;
-        public string CountryName;
-        public string RegionCode;
-        public string RegionName;
-        public string City;
-        public string ZipCode;
-        public string Latitude;
-        public string Longitude;
-        public string MetroCode;
-        public string AreaCode;
-    }
-
     public class GeoLocationApi
     {
         public static ConcurrentDictionary<IPAddress, GeoLocationData> GeoCache = new ConcurrentDictionary<IPAddress, GeoLocationData>();
@@ -66,8 +52,17 @@ namespace NetworkWatcher
                     if (el.Name == "RegionName") geoData.RegionName = el.Value;
                     if (el.Name == "City") geoData.City = el.Value;
                     if (el.Name == "ZipCode") geoData.ZipCode = el.Value;
-                    if (el.Name == "Latitude") geoData.Latitude = el.Value;
-                    if (el.Name == "Longitude") geoData.Longitude = el.Value;
+                    decimal temp = 0;
+                    if (el.Name == "Latitude" && !string.IsNullOrEmpty(el.Value))
+                    {
+                        decimal.TryParse(el.Value, out temp);
+                        geoData.Latitude = temp;
+                    }
+                    if (el.Name == "Longitude" && !string.IsNullOrEmpty(el.Value))
+                    {
+                        decimal.TryParse(el.Value, out temp);
+                        geoData.Longitude = temp;
+                    }
                     if (el.Name == "MetroCode") geoData.MetroCode = el.Value;
                     if (el.Name == "AreaCode") geoData.AreaCode = el.Value;
                 }
