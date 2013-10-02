@@ -106,7 +106,7 @@ namespace NetworkWatcher.Forms
             lvi.SubItems[3].Text = processName;
         }
 
-        public void FillInProcessName(ListViewItem lvi, int pid)
+        public void FillInProcessName(ListViewItem lvi, int pid, Connection connection)
         {
             Process p = null;
             try
@@ -115,7 +115,9 @@ namespace NetworkWatcher.Forms
             }
             catch { }
 
-            this.Invoke(spnd, lvi, p == null ? "Unknown" : p.ProcessName);
+            string name = p == null ? "Unknown" : p.ProcessName;
+            this.Invoke(spnd, lvi, name);
+            connection.Process = new ProcessInfo(pid, name);
         }
 
         public delegate void SetGeoLocationDelegate(ListViewItem lvi, string location);
@@ -158,6 +160,8 @@ namespace NetworkWatcher.Forms
 
         private void LoadList()
         {
+            Connections connections = Historical.Add();
+
             Api.MIB_TCPROW_OWNER_PID[] cn = Api.GetAllTcpConnections();
             foreach (Api.MIB_TCPROW_OWNER_PID item in cn)
             {
@@ -171,6 +175,8 @@ namespace NetworkWatcher.Forms
                 if (item.remoteAddr != 0 && remoteAddr.b1 != 127 && (!(remoteAddr.b1 == 192 && remoteAddr.b2 == 168)))
                 {
                     IPAddress ipa = new IPAddress(new byte[] { remoteAddr.b1, remoteAddr.b2, remoteAddr.b3, remoteAddr.b4 });
+
+                    IPAddress localIpa = new IPAddress(new byte[] { localAddr.b1, localAddr.b2, localAddr.b3, localAddr.b4 });
 
                     string remoteData =
                         string.Format("{0}.{1}.{2}.{3}:{4}",
@@ -191,9 +197,12 @@ namespace NetworkWatcher.Forms
                     lvi.SubItems.Add(localData);
                     lvi.SubItems.Add(item.owningPid.ToString());
 
+                    Connection connection = new Connection(ipa, localIpa, null, null, null, null);
+                    connections.Add(connection);
+
                     lvi.SubItems.Add(string.Empty);
 
-                    Task.Run(() => { FillInProcessName(lvi, item.owningPid); });
+                    Task.Run(() => { FillInProcessName(lvi, item.owningPid, connection); });
 
                     lvi.SubItems.Add(string.Empty);
 
