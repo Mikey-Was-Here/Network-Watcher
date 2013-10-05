@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using NetworkWatcher.Entity;
 
 namespace NetworkWatcher
 {
@@ -20,6 +21,29 @@ namespace NetworkWatcher
                 if (n[i] > 0) return n[i];
             }
             return 0;
+        }
+
+        public static string GetDisplayGeoLocation(GeoLocationData geoData)
+        {
+            string data = string.Empty;
+
+            if (geoData != null && !string.IsNullOrEmpty(geoData.CountryCode) && !string.IsNullOrEmpty(geoData.CountryName))
+            {
+                data = geoData.CountryCode + "/" + geoData.CountryName;
+                if (!string.IsNullOrEmpty(geoData.RegionName) && !string.IsNullOrEmpty(geoData.City))
+                {
+                    data += "/" + geoData.RegionName + "/" + geoData.City;
+                    if (geoData.Longitude.HasValue && geoData.Latitude.HasValue)
+                    {
+                        data += "/" + geoData.Longitude.Value + "/" + geoData.Latitude.Value;
+                    }
+                }
+            }
+            else
+            {
+                data = "Unknown";
+            }
+            return data;
         }
 
         public static IPAddress GetLocalIp4Address()

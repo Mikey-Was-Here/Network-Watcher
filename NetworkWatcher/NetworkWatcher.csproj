@@ -72,6 +72,7 @@
     <Compile Include="Entity\Connection.cs" />
     <Compile Include="Entity\Connections.cs" />
     <Compile Include="Entity\GeoLocationData.cs" />
+    <Compile Include="Entity\Ip4.cs" />
     <Compile Include="Entity\ProcessInfo.cs" />
     <Compile Include="Forms\frmAbout.cs">
       <SubType>Form</SubType>

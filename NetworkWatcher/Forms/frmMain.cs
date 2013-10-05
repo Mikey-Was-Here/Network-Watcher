@@ -2,41 +2,22 @@
 using System.Diagnostics;
 using System.Drawing;
 using System.Net;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Collections.Generic;
 using Microsoft.Win32;
 using NetworkWatcher.Entity;
 
 namespace NetworkWatcher.Forms
 {
-    [StructLayout(LayoutKind.Explicit)]
-    internal struct ip4
-    {
-        [FieldOffset(0)]
-        public byte b1;
-
-        [FieldOffset(1)]
-        public byte b2;
-
-        [FieldOffset(2)]
-        public byte b3;
-
-        [FieldOffset(3)]
-        public byte b4;
-
-        [FieldOffset(0)]
-        public uint u;
-    }
-
     public partial class frmMain : Form
     {
         public NotifyIcon Tray { get; private set; }
 
-        private SetHostNameDelegate shnd = SetHostName;
-        private FillInArinInfoDelegate fhnd = SetArinInfo;
-        private SetProcessNameDelegate spnd = SetProcessName;
-        private SetGeoLocationDelegate sgld = SetGeoLocation;
+        private SetHostNameDelegate shnd;
+        private FillInArinInfoDelegate fhnd;
+        private SetProcessNameDelegate spnd;
+        private SetGeoLocationDelegate sgld;
 
         public void cmRefresh(Object sender, EventArgs e)
         {
@@ -63,11 +44,23 @@ namespace NetworkWatcher.Forms
             Tray.ContextMenu = cm;
             Tray.Visible = true;
             Tray.Icon = this.Icon;
+
+            shnd = SetHostName;
+            fhnd = SetArinInfo;
+            spnd = SetProcessName;
+            sgld = SetGeoLocation;
         }
 
-        public static void SetHostName(ListViewItem lvi, string hostName)
+        public void SetHostName(ListViewItem lvi, string hostName)
         {
-            lvi.SubItems[5].Text = hostName;
+            if (this.InvokeRequired)
+            {
+                this.Invoke(shnd, lvi, hostName);
+            }
+            else
+            {
+                lvi.SubItems[5].Text = hostName;
+            }
         }
 
         public delegate void SetHostNameDelegate(ListViewItem lvi, string hostName);
@@ -87,9 +80,16 @@ namespace NetworkWatcher.Forms
 
         public delegate void FillInArinInfoDelegate(ListViewItem lvi, string hostName);
 
-        public static void SetArinInfo(ListViewItem lvi, string ArinInfo)
+        public void SetArinInfo(ListViewItem lvi, string ArinInfo)
         {
-            lvi.SubItems[6].Text = ArinInfo;
+            if (this.InvokeRequired)
+            {
+                this.Invoke(fhnd, lvi, ArinInfo);
+            }
+            else
+            {
+                lvi.SubItems[6].Text = ArinInfo;
+            }
         }
 
         public void FillInArinInfo(ListViewItem lvi, IPAddress ipa)
@@ -101,9 +101,17 @@ namespace NetworkWatcher.Forms
 
         public delegate void SetProcessNameDelegate(ListViewItem lvi, string hostName);
 
-        public static void SetProcessName(ListViewItem lvi, string processName)
+        public void SetProcessName(ListViewItem lvi, string processName)
         {
-            lvi.SubItems[3].Text = processName;
+            if (this.InvokeRequired)
+            {
+                this.Invoke(spnd, lvi, processName);
+            }
+            else
+            {
+                lvi.SubItems[3].Text = processName;
+            }
+            
         }
 
         public void FillInProcessName(ListViewItem lvi, int pid, Connection connection)
@@ -117,14 +125,21 @@ namespace NetworkWatcher.Forms
 
             string name = p == null ? "Unknown" : p.ProcessName;
             this.Invoke(spnd, lvi, name);
-            connection.Process = new ProcessInfo(pid, name);
+            connection.ProcessInfo = new ProcessInfo(pid, name);
         }
 
         public delegate void SetGeoLocationDelegate(ListViewItem lvi, string location);
 
-        public static void SetGeoLocation(ListViewItem lvi, string location)
+        public void SetGeoLocation(ListViewItem lvi, string location)
         {
-            lvi.SubItems[4].Text = location;
+            if (this.InvokeRequired)
+            {
+                this.Invoke(sgld, lvi, location);
+            }
+            else
+            {
+                lvi.SubItems[4].Text = location;
+            }
         }
 
         public void FillInGeoLocation(ListViewItem lvi, IPAddress ipa)
@@ -157,6 +172,8 @@ namespace NetworkWatcher.Forms
 
             this.Invoke(sgld, lvi, data);
         }
+
+        private Dictionary<int, ListViewItem> xl = new Dictionary<int, ListViewItem>();
 
         private void LoadList()
         {
@@ -197,26 +214,45 @@ namespace NetworkWatcher.Forms
                     lvi.SubItems.Add(localData);
                     lvi.SubItems.Add(item.owningPid.ToString());
 
-                    Connection connection = new Connection(ipa, localIpa, null, null, null, null);
+                    Connection connection = new Connection(ipa, localIpa, item.owningPid);
                     connections.Add(connection);
+                    connection.ConnectionDataComplete += connection_ConnectionDataComplete;
+                    if (!xl.ContainsKey(connection.GetHashCode()))
+                    {
+                        xl.Add(connection.GetHashCode(), lvi);
+                    }
 
                     lvi.SubItems.Add(string.Empty);
 
-                    Task.Run(() => { FillInProcessName(lvi, item.owningPid, connection); });
+                    //Task.Run(() => { FillInProcessName(lvi, item.owningPid, connection); });
 
                     lvi.SubItems.Add(string.Empty);
 
-                    Task.Run(() => { FillInGeoLocation(lvi, ipa); });
+                    //Task.Run(() => { FillInGeoLocation(lvi, ipa); });
 
                     lvi.SubItems.Add(string.Empty);
 
                     lvi.SubItems.Add(string.Empty);
 
-                    Task.Run(() => { FillInHostName(lvi, ipa); });
-                    Task.Run(() => { FillInArinInfo(lvi, ipa); });
+                    //Task.Run(() => { FillInHostName(lvi, ipa); });
+                    //Task.Run(() => { FillInArinInfo(lvi, ipa); });
 
                     lvMain.Items.Add(lvi);
+                    
                 }
+            }
+        }
+
+        void connection_ConnectionDataComplete(object sender, EventArgs e)
+        {
+            Connection connection = sender as Connection;
+            if (connection != null)
+            {
+                ListViewItem lvi = xl[connection.GetHashCode()];
+                spnd.Invoke(lvi, connection.ProcessInfo.ProcessName);
+                shnd.Invoke(lvi, connection.HostName);
+                fhnd.Invoke(lvi, connection.Owner);
+                sgld.Invoke(lvi, Functions.GetDisplayGeoLocation(connection.Location));
             }
         }
 
